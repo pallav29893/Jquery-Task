@@ -44,7 +44,6 @@ $(document).ready(function () {
         // inputs: [] 
       });
       localStorage.setItem('data', JSON.stringify(data));
-      $(".heading-input").draggable();
       console.log(newHeading,"<<<<<<<<<<<")
     }
   });
