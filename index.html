@@ -69,19 +69,20 @@
             <form class="heading-form">
               <div class="mb-3">
                 <label for="heading-input" class="col-form-label"
-                  >Heading</label
+                  >Heading*</label
                 >
-                <input type="text" class="form-control heading-input" />
+                <input type="text" class="form-control heading-input" required/>
               </div>
               <div class="modal-footer">
                 <button
                   type="submit"
                   class="btn btn-secondary"
                   data-bs-dismiss="modal"
+                  required
                 >
                   Close
                 </button>
-                <button type="submit" class="btn btn-primary save-heading-btn">
+                <button type="submit" class="btn btn-primary save-heading-btn" >
                   Save
                 </button>
               </div>
@@ -105,7 +106,7 @@
               class="modal-title fs-5"
               id="exampleModalLabel"
             >
-              Subheading
+              Subheading*
             </h1>
             <button
               type="button"
@@ -118,7 +119,7 @@
             <form class="subheading-form">
               <div class="mb-3">
                 <label for="heading-select" class="col-form-label"
-                  >Select Heading</label
+                  >Select Heading</label required
                 >
                 <select
                   class="form-select heading-select"
@@ -129,21 +130,23 @@
               </div>
               <div class="mb-3">
                 <label for="subheading-input" class="col-form-label"
-                  >Subheading</label
+                  >Subheading</label 
                 >
-                <input type="text" class="form-control subheading-input" />
+                <input type="text" class="form-control subheading-input" required/>
               </div>
               <div class="modal-footer">
                 <button
                   type="submit"
                   class="btn btn-secondary"
                   data-bs-dismiss="modal"
+                  
                 >
                   Close
                 </button>
                 <button
                   type="submit"
                   class="btn btn-primary save-subheading-btn"
+                  required
                 >
                   Save
                 </button>
@@ -204,24 +207,38 @@
                   aria-label="Choose Input Type"
                 >
                   <option selected disabled>Select an input type</option>
-                  <option value="input">Input</option>
                   <option value="textarea">Textarea</option>
+                  <option value="text">Text</option>
                   <option value="select">Select</option>
+                  <option value="radio">Radio </option>
                   <option value="checkbox">Checkbox</option>
-                  <option value="radio_button">Radio Button</option>
-                  <option value="button">Button</option>
+                  <option value="range">Range</option>
+                  <option value="search">Search</option>
+                  <option value="submit">Submit</option>
+                  <option value="url">url</option>
+                  <option value="month">Month</option>
+                  <option value="week">Week</option>
+                  <option value="number">Number</option>
+                  <option value="file">File</option>
+                  <option value="password">Password</option>
+                  <option value="date">Date</option>
+                  <option value="datetime-local">Datetime-local</option>
+                  <option value="image">Image</option>
+                  <option value="email">Email</option>
+                  <option value="time">Time</option>
+                  <option value="color">Color</option>
                 </select>
               </div>
               <div class="mb-3 input-type-options">
                 <div class="input-type-specific-options">
-                  <label>Type:</label>
-                  <input type="text" class="form-control input-type" />
+                  <label>Name:</label>
+                  <input type="text" class="form-control input-name" required/>
                   <br />
                   <label>Label:</label>
-                  <input type="text" class="form-control input-label" />
+                  <input type="text"  class="form-control input-label" />
                   <br />
                   <label>Class:</label>
-                  <input type="text" class="form-control input-class" />
+                  <input type="text" class="form-control input-class" required/>
                   <br />
                   <label>Placeholder:</label>
                   <input type="text" class="form-control input-placeholder" />
@@ -242,6 +259,12 @@
                   <input
                     type="checkbox"
                     class="form-check-input input-disabled"
+                  />
+                  <br />
+                  <label>Required:</label>
+                  <input
+                    type="checkbox"
+                    class="form-check-input input-required"
                   />
                 </div>
               </div>

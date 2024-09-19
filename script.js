@@ -35,7 +35,7 @@ $(document).ready(function () {
         `<option value="${newHeading}">${newHeading}</option>`
       );
       $(".main-content").append(
-        `<div class="heading-container"><h1>${newHeading}</h1></div>`
+        `<div class="heading-container"><h1>${newHeading}</h1></div>`        
       );
       $(".heading-input").val("");
       data.push({
@@ -91,66 +91,92 @@ $(document).ready(function () {
 
   $(".form-inputs").on("submit", function (e) {
     e.preventDefault();
+
     const selectedHeading = $(".heading-form-select").val();
     const selectedSubheading = $(".subheading-form-select").val();
     const inputType = $(".choose-input-type").val();
     const attributes = {
-      type: $(".input-type").val(),
-      class: $(".input-class").val(),
-      label: $(".input-label").val(),
-      placeholder: $(".input-placeholder").val(),
-      value: $(".input-value").val(),
-      option: $(".input-option").val(),
-      readonly: $(".input-readonly").prop("checked") ? "readonly" : "",
-      disabled: $(".input-disabled").prop("checked") ? "disabled" : "",
+        name: $(".input-name").val(),
+        class: $(".input-class").val(),
+        label: $(".input-label").val(),
+        placeholder: $(".input-placeholder").val(),
+        value: $(".input-value").val(),
+        option: $(".input-option").val(),
+        readonly: $(".input-readonly").prop("checked") ? "readonly" : "",
+        disabled: $(".input-disabled").prop("checked") ? "disabled" : "",
+        required: $(".input-required").prop("checked") ? "required" : "",
     };
+
     if (selectedHeading && selectedSubheading && inputType) {
-      $(".form").modal("hide");
-      let inputHTML = "";
-      switch (inputType) {
-        case "input":
-          inputHTML = `<input type="${attributes.type}" class="${attributes.class}" placeholder="${attributes.placeholder}" value="${attributes.value}" ${attributes.readonly} ${attributes.disabled}>`;
-          break;
-        case "textarea":
-          inputHTML = `<textarea class="${attributes.class}" placeholder="${attributes.placeholder}" ${attributes.readonly}  ${attributes.disabled}>${attributes.value}</textarea>`;
-          break;
-        case "select":
-          inputHTML = `<select class="${attributes.class}" ${
-            attributes.readonly
-          }  ${attributes.disabled}>${attributes.option
-            .split(",")
-            .map((opt) => `<option value="${opt}">${opt}</option>`)
-            .join("")}</select>`;
-          break;
-        case "checkbox":
-        case "radio_button":
-          inputHTML = `<div class="form-check">${attributes.option
-            .split(",")
-            .map(
-              (opt) => `
-                        <input type="${
-                          inputType === "checkbox" ? "checkbox" : "radio"
-                        }" name="${
-                inputType === "radio_button" ? "radio-group" : ""
-              }" class="${attributes.class}" value="${opt}" ${
-                attributes.readonly
-              }  ${attributes.disabled}>
-                        <label class="form-check-label">${opt}</label>`
-            )
-            .join("")}</div>`;
-          break;
-        case "button":
-          inputHTML = `<button type="button" class="${attributes.class}" ${attributes.readonly} ${attributes.disabled}>${attributes.value}</button>`;
-          break;
-      }
+        $(".form").modal("hide");
+        
+        let inputHTML = "";
+        switch (inputType) {
+            case "text":
+            case "password":
+            case "url":
+            case "email":
+            case "search":
+            case "number":
+            case "tel":
+                inputHTML = `<input type="${inputType}" name="${attributes.name}" class="${attributes.class}" placeholder="${attributes.placeholder}" value="${attributes.value}" ${attributes.readonly} ${attributes.disabled} ${attributes.required}>`;
+                break;
+
+            case "textarea":
+                inputHTML = `<textarea name="${attributes.name}" class="${attributes.class}" placeholder="${attributes.placeholder}" ${attributes.readonly} ${attributes.disabled}  ${attributes.required}>${attributes.value}</textarea>`;
+                break;
+
+            case "select":
+                inputHTML = `<select name="${attributes.name}" class="${attributes.class}" ${attributes.readonly} ${attributes.disabled} ${attributes.required}>${attributes.option.split(",").map(opt => `<option value="${opt}">${opt}</option>`).join("")}</select>`;
+                break;
+
+            case "checkbox":
+            case "radio":
+                inputHTML = `<div class="form-check">${attributes.option.split(",").map(opt => `
+                    <input type="${inputType}" name="${inputType === 'radio' ? attributes.name : ''}" class="${attributes.class}" value="${opt}" ${attributes.readonly} ${attributes.disabled} ${attributes.required}>
+                    <label class="form-check-label">${opt}</label>`).join("")}</div>`;
+                break;
+
+            case "range":
+                inputHTML = `<input type="range" name="${attributes.name}" class="${attributes.class}" value="${attributes.value}" ${attributes.readonly} ${attributes.disabled} ${attributes.required}>`;
+                break;
+
+            case "button":
+            case "submit":
+                inputHTML = `<button type="${inputType}" class="${attributes.class}" ${attributes.readonly} ${attributes.disabled} ${attributes.required}>${attributes.value}</button>`;
+                break;
+
+            case "date":
+            case "datetime-local":
+            case "month":
+            case "week":
+            case "time":
+                inputHTML = `<input type="${inputType}" name="${attributes.name}" class="${attributes.class}" value="${attributes.value}" ${attributes.readonly} ${attributes.disabled} ${attributes.required}>`;
+                break;
+
+            case "color":
+                inputHTML = `<input type="color" name="${attributes.name}" class="${attributes.class}" ${attributes.readonly} ${attributes.disabled} ${attributes.required}>`;
+                break;
+
+            case "file":
+                inputHTML = `<input type="file" name="${attributes.name}" class="${attributes.class}" ${attributes.readonly} ${attributes.disabled} ${attributes.required}>`;
+                break;
+
+            case "image":
+                inputHTML = `<input type="image" src="${attributes.value}" name="${attributes.name}" class="${attributes.class}" ${attributes.readonly} ${attributes.disabled} ${attributes.required}>`;
+                break;
+
+        }
+
       $(`h1:contains('${selectedHeading}')`)
         .nextAll(".subheading-container")
         .find(`h3:contains('${selectedSubheading}')`)
         .after(
-          `<div class="input-container"><label>${$(
+          `<div style="margin-left:40px;" class="input-container"><label>${$(
             ".input-label"
           ).val()}</label>${inputHTML}</div>`
         );
+
       const headingIndex = data.findIndex(heading => heading.heading === selectedHeading);
       const subheadingIndex = data[headingIndex].subheadings.findIndex(subheading => subheading.subheading === selectedSubheading);
       if (headingIndex !== -1 && subheadingIndex !== -1) {
@@ -168,43 +194,63 @@ $(document).ready(function () {
   });
 });
 
-function getInputHTML(type, attributes) {
+function getInputHTML(inputType, attributes) {
   let inputHTML = "";
-  switch (type) {
-    case "input":
-      inputHTML = `<input type="${attributes.type}" class="${attributes.class}" placeholder="${attributes.placeholder}" value="${attributes.value}" ${attributes.readonly} ${attributes.disabled}>`;
-      break;
-    case "textarea":
-      inputHTML = `<textarea class="${attributes.class}" placeholder="${attributes.placeholder}" ${attributes.readonly}  ${attributes.disabled}>${attributes.value}</textarea>`;
-      break;
-    case "select":
-      inputHTML = `<select class="${attributes.class}" ${
-        attributes.readonly
-      }  ${attributes.disabled}>${attributes.option
-        .split(",")
-        .map((opt) => `<option value="${opt}">${opt}</option>`)
-        .join("")}</select>`;
-      break;
-    case "checkbox":
-    case "radio_button":
-      inputHTML = `<div class="form-check">${attributes.option
-        .split(",")
-        .map(
-          (opt) => `
-                    <input type="${
-                      type === "checkbox" ? "checkbox" : "radio"
-                    }" name="${
-            type === "radio_button" ? "radio-group" : ""
-          }" class="${attributes.class}" value="${opt}" ${
-            attributes.readonly
-          }  ${attributes.disabled}>
-                    <label class="form-check-label">${opt}</label>`
-        )
-        .join("")}</div>`;
-      break;
-    case "button":
-      inputHTML = `<button type="button" class="${attributes.class}" ${attributes.readonly} ${attributes.disabled}>${attributes.value}</button>`;
-      break;
+
+  switch (inputType) {
+      case "text":
+      case "password":
+      case "url":
+      case "email":
+      case "search":
+      case "number":
+      case "tel":
+          inputHTML = `<input type="${inputType}" name="${attributes.name}" class="${attributes.class}" placeholder="${attributes.placeholder}" value="${attributes.value}" ${attributes.readonly} ${attributes.disabled} ${attributes.required}>`;
+          break;
+
+      case "textarea":
+          inputHTML = `<textarea name="${attributes.name}" class="${attributes.class}" placeholder="${attributes.placeholder}" ${attributes.readonly} ${attributes.disabled}  ${attributes.required}>${attributes.value}</textarea>`;
+          break;
+
+      case "select":
+          inputHTML = `<select name="${attributes.name}" class="${attributes.class}" ${attributes.readonly} ${attributes.disabled} ${attributes.required}>${attributes.option.split(",").map(opt => `<option value="${opt}">${opt}</option>`).join("")}</select>`;
+          break;
+
+      case "checkbox":
+      case "radio":
+          inputHTML = `<div class="form-check">${attributes.option.split(",").map(opt => `
+              <input type="${inputType}" name="${inputType === 'radio' ? attributes.name : ''}" class="${attributes.class}" value="${opt}" ${attributes.readonly} ${attributes.disabled} ${attributes.required}>
+              <label class="form-check-label">${opt}</label>`).join("")}</div>`;
+          break;
+
+      case "range":
+          inputHTML = `<input type="range" name="${attributes.name}" class="${attributes.class}" value="${attributes.value}" ${attributes.readonly} ${attributes.disabled} ${attributes.required}>`;
+          break;
+
+      case "button":
+      case "submit":
+          inputHTML = `<button type="${inputType}" class="${attributes.class}" ${attributes.readonly} ${attributes.disabled} ${attributes.required}>${attributes.value}</button>`;
+          break;
+
+      case "date":
+      case "datetime-local":
+      case "month":
+      case "week":
+      case "time":
+          inputHTML = `<input type="${inputType}" name="${attributes.name}" class="${attributes.class}" value="${attributes.value}" ${attributes.readonly} ${attributes.disabled} ${attributes.required}>`;
+          break;
+
+      case "color":
+          inputHTML = `<input type="color" name="${attributes.name}" class="${attributes.class}" ${attributes.readonly} ${attributes.disabled} ${attributes.required}>`;
+          break;
+
+      case "file":
+          inputHTML = `<input type="file" name="${attributes.name}" class="${attributes.class}" ${attributes.readonly} ${attributes.disabled} ${attributes.required}>`;
+          break;
+
+      case "image":
+          inputHTML = `<input type="image" src="${attributes.value}" name="${attributes.name}" class="${attributes.class}" ${attributes.readonly} ${attributes.disabled} ${attributes.required}>`;
+          break;
   }
-  return inputHTML;
+  return inputHTML; 
 }
